@@ -1,0 +1,6 @@
+*.sh
+*.pyc
+*.bin
+*.b_dat
+*.h5
+*.xmf
