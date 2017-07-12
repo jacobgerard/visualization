@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 
-def writeH5(pressure,u,v,w):
+def writeH5(pressure,u,v,w,filename):
   """
   Write the h5 file that will save the information needed in proper structure.
   pressure = numpy array with pressure values
@@ -11,7 +11,7 @@ def writeH5(pressure,u,v,w):
   dims = 3-tuple with the number of rank of each dimension
   """
 
-  f = h5py.File('out.h5','w')
+  f = h5py.File(filename,'w')
 
   # Store velocity data into the velo_group of h5 file
   velo_group = f.create_group("velo_group")
@@ -25,7 +25,7 @@ def writeH5(pressure,u,v,w):
 
   f.close()
 
-def writeXdmf(dims,filename):
+def writeXdmf(dims,filename,i):
   """
   Write the xmf file, that describes the hdf5 data, to be read by Paraview.
   filename = string with the desired filename
@@ -53,20 +53,20 @@ def writeXdmf(dims,filename):
 
   f.write('<Attribute Name="pressure" AttributeType="Scalar" Center="Node">\n')
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
-  f.write('out.h5:/pres_group/presmag\n')
+  f.write('out'+str(i)+'.h5:/pres_group/presmag\n')
   f.write('</DataItem>\n')
   f.write('</Attribute>\n')
 
   f.write('<Attribute Name="velocity" AttributeType="Vector" Center="Node">\n')
   f.write('<DataItem ItemType="Function" Function="JOIN($0, $1, $2)" Dimensions="%d %d %d 3">\n'%(dims[0],dims[1],dims[2]))
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
-  f.write('out.h5:/velo_group/x_velo\n')
+  f.write('out'+str(i)+'.h5:/velo_group/x_velo\n')
   f.write('</DataItem>\n')
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
-  f.write('out.h5:/velo_group/y_velo\n')
+  f.write('out'+str(i)+'.h5:/velo_group/y_velo\n')
   f.write('</DataItem>\n')
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
-  f.write('out.h5:/velo_group/z_velo\n')
+  f.write('out'+str(i)+'.h5:/velo_group/z_velo\n')
   f.write('</DataItem>\n')
   f.write('</DataItem>\n')
       
