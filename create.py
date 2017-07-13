@@ -21,9 +21,6 @@ from hdf5Helper import *
 #rank = comm.Get_rank()
 #size = comm.Get_size()
 
-#import sys
-#sys.path.insert(1,'.')
-
 # Read data from params.lbm
 input_file_name = 'params.lbm'
 input_data = open(input_file_name,'r')
@@ -54,11 +51,9 @@ p_conv_fact = float(input_data.readline())
 
 input_data.close()
 
-#u_conv_fact = l_conv_fact/t_conv_fact;
 u_conv_fact = t_conv_fact/l_conv_fact;
 nnodes = Nx*Ny*Nz
 
-# compute geometric data only once
 x = np.linspace(0.,Lx_p,Nx).astype(np.float64);
 y = np.linspace(0.,Ly_p,Ny).astype(np.float64);
 z = np.linspace(0.,Lz_p,Nz).astype(np.float64);
@@ -70,7 +65,7 @@ YY = np.reshape(Y,numEl)
 ZZ = np.reshape(Z,numEl)
 
 # compute the number of data dumps I expect to process
-nDumps = (Num_ts-Warmup_ts)/plot_freq + 1 # initial data plus Num_ts/plot_freq updates
+nDumps = (Num_ts-Warmup_ts)/plot_freq + 1 
 
 for i in range(nDumps):
   rho_fn = 'density'+str(i)+'.b_dat'
@@ -87,7 +82,7 @@ for i in range(nDumps):
   ux /= u_conv_fact
   uy /= u_conv_fact
   uz /= u_conv_fact
-  pressure /= p_conv_fact # please check this...
+  pressure /= p_conv_fact 
   h5_file = 'out'+str(i)+'.h5'
   xmf_file = 'data'+str(i)+'.xmf'
   dims = (Nz,Ny,Nx)
