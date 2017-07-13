@@ -6,7 +6,6 @@ def writeH5(pressure,u,v,w,filename):
   Write the h5 file that will save the information needed in proper structure.
   pressure = numpy array with pressure values
   u,v,w = numpy array with velocity data
-  x,y,z = numpy array with geometry data
   filename = string with desired filename
   dims = 3-tuple with the number of rank of each dimension
   """
@@ -35,7 +34,7 @@ def writeXdmf(dims,filename,i):
   f = open(filename,'w')
   f.write('<?xml version="1.0" ?>\n')
   f.write('<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>\n')
-  f.write('<Xdmf>\n')
+  f.write('<Xdmf xmlns:xi="http://www.w3.org/2003/XInclude" Version="2.1">\n')
   f.write('<Domain>\n')
 
   f.write('<Grid Name="my_Grid" GridType="Uniform">\n')
@@ -51,12 +50,6 @@ def writeXdmf(dims,filename,i):
   f.write('</DataItem>\n')
   f.write('</Geometry>\n')
 
-  f.write('<Attribute Name="pressure" AttributeType="Scalar" Center="Node">\n')
-  f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
-  f.write('out'+str(i)+'.h5:/pres_group/presmag\n')
-  f.write('</DataItem>\n')
-  f.write('</Attribute>\n')
-
   f.write('<Attribute Name="velocity" AttributeType="Vector" Center="Node">\n')
   f.write('<DataItem ItemType="Function" Function="JOIN($0, $1, $2)" Dimensions="%d %d %d 3">\n'%(dims[0],dims[1],dims[2]))
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
@@ -69,8 +62,14 @@ def writeXdmf(dims,filename,i):
   f.write('out'+str(i)+'.h5:/velo_group/z_velo\n')
   f.write('</DataItem>\n')
   f.write('</DataItem>\n')
-      
   f.write('</Attribute>\n')
+
+  f.write('<Attribute Name="pressure" AttributeType="Scalar" Center="Node">\n')
+  f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
+  f.write('out'+str(i)+'.h5:/pres_group/presmag\n')
+  f.write('</DataItem>\n')
+  f.write('</Attribute>\n')
+
   f.write('</Grid>\n')
   f.write('</Domain>\n')
   f.write('</Xdmf>\n')

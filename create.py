@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Data processing script for binary data files.
 
@@ -10,18 +11,18 @@ Will produce *.h5 storage files as well as *.xmf files to
 be read by Paraview.
 """
 
-from mpi4py import MPI
+#from mpi4py import MPI
 import math
 import os
 import numpy as np
 from hdf5Helper import *
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
+#comm = MPI.COMM_WORLD
+#rank = comm.Get_rank()
+#size = comm.Get_size()
 
-import sys
-sys.path.insert(1,'.')
+#import sys
+#sys.path.insert(1,'.')
 
 # Read data from params.lbm
 input_file_name = 'params.lbm'
@@ -55,7 +56,6 @@ input_data.close()
 
 #u_conv_fact = l_conv_fact/t_conv_fact;
 u_conv_fact = t_conv_fact/l_conv_fact;
-print("u_conv_fact = %8.3e \n"%u_conv_fact)
 nnodes = Nx*Ny*Nz
 
 # compute geometric data only once
@@ -72,7 +72,7 @@ ZZ = np.reshape(Z,numEl)
 # compute the number of data dumps I expect to process
 nDumps = (Num_ts-Warmup_ts)/plot_freq + 1 # initial data plus Num_ts/plot_freq updates
 
-for i in range(rank,nDumps,size):
+for i in range(nDumps):
   rho_fn = 'density'+str(i)+'.b_dat'
   ux_fn = 'ux'+str(i)+'.b_dat'
   uy_fn = 'uy'+str(i)+'.b_dat'
@@ -91,6 +91,10 @@ for i in range(rank,nDumps,size):
   h5_file = 'out'+str(i)+'.h5'
   xmf_file = 'data'+str(i)+'.xmf'
   dims = (Nz,Ny,Nx)
+
+  if i==0:
+    print "Dimensions are",dims
+  print "Processing data dump #",i
 
   writeH5(pressure,ux,uy,uz,h5_file)
   writeXdmf(dims,xmf_file,i)
