@@ -1,7 +1,7 @@
 import numpy as np
 import h5py
 
-def writeH5(pressure,u,v,w,filename):
+def writeH5(pressure,u,v,w,velmag,filename):
   """
   Write the h5 file that will save the information needed in proper structure.
   pressure = numpy array with pressure values
@@ -17,6 +17,7 @@ def writeH5(pressure,u,v,w,filename):
   x_velo = velo_group.create_dataset("x_velo",data=u)
   y_velo = velo_group.create_dataset("y_velo",data=v)
   z_velo = velo_group.create_dataset("z_velo",data=w)
+  velmag = velo_group.create_dataset("velmag",data=velmag)
 
   # Store velocity data into the velo_group of h5 file
   pres_group = f.create_group("pres_group")
@@ -67,6 +68,12 @@ def writeXdmf(dims,filename,i):
   f.write('<Attribute Name="pressure" AttributeType="Scalar" Center="Node">\n')
   f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
   f.write('out'+str(i)+'.h5:/pres_group/presmag\n')
+  f.write('</DataItem>\n')
+  f.write('</Attribute>\n')
+
+  f.write('<Attribute Name="velocityMagnitude" AttributeType="Scalar" Center="Node">\n')
+  f.write('<DataItem Dimensions="%d %d %d" NumberType="Float" Format="HDF">\n'%(dims[0],dims[1],dims[2]))
+  f.write('out'+str(i)+'.h5:/velo_group/velmag\n')
   f.write('</DataItem>\n')
   f.write('</Attribute>\n')
 
